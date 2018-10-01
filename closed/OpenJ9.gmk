@@ -223,7 +223,16 @@ run-ddrgen :
 		$(EXPORT_MSVS_ENV_VARS) \
 		OPENJDK_VERSION_NUMBER_FOUR_POSITIONS=$(VERSION_NUMBER_FOUR_POSITIONS) \
 		VERSION_MAJOR=$(VERSION_FEATURE) \
-	&& $(MAKE) -C $(OUTPUTDIR)/vm/ddr -f run_omrddrgen.mk
+	&& $(DDR_LIB_PATH) $(MAKE) -C $(OUTPUTDIR)/vm/ddr -f run_omrddrgen.mk
+endif
+
+# ddrgen dynamically links libomrsig now, which is not found in the default search path.
+# Since there's no real equivalent on AIX to setting rpath=$ORIGIN when compiling ddrgen
+# on Linux, we set LD_LIBRARY_PATH at runtime instead.
+ifeq (aix,$(OPENJDK_TARGET_OS))
+  DDR_LIB_PATH := LD_LIBRARY_PATH=..
+else
+  DDR_LIB_PATH :=
 endif
 
 $(eval $(call openj9_add_jdk_rules, \
