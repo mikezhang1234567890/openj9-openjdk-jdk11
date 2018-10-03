@@ -230,7 +230,7 @@ endif
 # Since there's no real equivalent on AIX to setting rpath=$ORIGIN when compiling ddrgen
 # on Linux, we set LD_LIBRARY_PATH at runtime instead.
 ifeq (aix,$(OPENJDK_TARGET_OS))
-  DDR_LIB_PATH := LD_LIBRARY_PATH=..
+  DDR_LIB_PATH := LD_LIBRARY_PATH=.. LIBPATH=..
 else
   DDR_LIB_PATH :=
 endif
